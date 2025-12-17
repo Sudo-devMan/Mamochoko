@@ -1,0 +1,16 @@
+	
+
+									TASKS
+
+						1. Create edit moment page
+						2. Create delete moment function
+						3. Create moment detail page
+							3.1 Create a slider for the moment's media 
+							3.2 Delete individual media
+						4. Polish moments in the public site view (list, detail)
+						5. Create a profile page and add its link on the floating loggedin 		indicator
+						6. Profile page should have a form to upload resources
+						7. Profile page should have edit view
+						8. Implement search functionality for moments
+
+						!!!!!!!!!!ALL TASKS DONE!!!!!!!!!

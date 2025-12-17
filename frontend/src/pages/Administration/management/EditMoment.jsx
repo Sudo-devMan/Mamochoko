@@ -1,0 +1,231 @@
+
+import { Link, NavLink, useParams, useNavigate } from "react-router-dom";
+import api from "../../../api";
+import { useState, useEffect } from "react";
+import { fixDate } from "../../../utils";
+import { USER } from "../../../constants";
+
+const profile = {
+    width: "2.8em",
+    height: "2.8em",
+    marginRight: ".3em",
+    borderRadius: "100%"
+    // objectFit: "cover"
+}
+
+
+function EditMoment() {
+    const [moment, setMoment] = useState(null)
+    const [loading, setLoading] = useState(false)
+    const [deleting, setDeleting] = useState(false)
+    const [saving, setSaving] = useState(false)
+    const {id} = useParams()
+
+    const [title, setTitle] = useState('')
+    const [body, setBody] = useState('')
+    const [files, setFiles] = useState([])
+
+    const navigate = useNavigate()
+
+    const user = JSON.parse(localStorage.getItem(USER))
+
+    useEffect(() => {fetchMoment()}, [])
+
+    const fetchMoment = async() => {
+        setLoading(true)
+        try {
+            const res = await api.get(`management/moments/${id}/`)
+            if (res.status === 200) {
+                setMoment(res.data)
+                setTitle(res.data.title)
+                setBody(res.data.body)
+            } else {
+                throw new Error('Something went wrong')
+            }
+        } catch (err) {
+            if (err.message.includes('401')) {
+                navigate('/logout')
+            }
+            alert(err.message)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const deleteMoment = async() => {
+        setDeleting(true)
+        try {
+            const m = await api.get(`management/moments/${id}/`)
+            const isSure = prompt(`Are you sure you wanna delete your moment: ${m.title} \nType 'yes' to delete the moment.`)
+            if (isSure === 'yes') {
+                const res = await api.delete(`management/moments/${id}/`)
+                if (res.status === 204) {
+                    alert('Moment has been successfully deleted!')
+                    navigate(-1)
+
+                } else {
+                    throw new Error("Something went wrong")
+                }
+            } else {
+                alert('Moment was not deleted because you did not type \'yes\'')
+            }
+        } catch (err) {
+            alert(err.message)
+        } finally {
+            setDeleting(false)
+        }
+    }
+    
+    const deleteMomentMedia = async(id) => {
+        setDeleting(true)
+        try {
+            if (moment.media.length === 1){
+                alert("You cannot delete all the pictures and videos, cuz nthwena e tlo ba weird.")
+            } else {
+                const isSure = prompt(`Are you sure you wanna delete? Type 'yes' to delete`)
+                if (isSure === 'yes') {
+                    const res = await api.delete(`management/moment-media/${id}/`)
+                    if (res.status === 204) {
+                        alert('Moment media has been successfully deleted!')
+                        fetchMoment()
+                    } else {
+                        throw new Error("Something went wrong")
+                    }
+                } else {
+                    alert('Moment was not deleted because you did not type \'yes\'')
+                }
+            }
+
+        } catch (err) {
+            alert(err.message)
+        } finally {
+            setDeleting(false)
+        }
+    }
+    
+    const saveChanges = async() => {
+        setSaving(true) 
+        // console.log(files)
+        try {
+            const formData = new FormData()
+			formData.append('title', title)
+			formData.append('body', body)
+			formData.append('facebook_link', 'https://www.google.com')
+			files.forEach((f) => formData.append('media_uploads', f))
+
+            const res = await api.put(`management/moments/${id}/`, formData)
+
+            if (res.status === 200) {
+                alert('Successfully edited moment!')
+                navigate(`/admin/moments/${id}/detail`)
+            } else {
+                throw new Error("Something went wrong. Please try again")
+            }
+
+            // console.log(formData.getAll('title'), formData.getAll('body'), formData.getAll('media_uploads'))
+        } catch (err) {
+            if (err.message.includes('401')){
+                navigate('/logout')
+                navigate('/')
+            }
+            console.log(err)
+            alert(err.message)
+        } finally {
+            setSaving(false)
+        }
+    }
+
+
+  return (
+    !loading && moment !== null && moment.user.id === user.id ? <>
+                                    <div className="div bg-dark-roon-sm text-light">
+                                        <nav className='p-2'>
+                                            <NavLink className={"naked-link-sm"} to={"/admin/home"}>Home {">"}</NavLink>
+                                            <NavLink className={"naked-link-sm"} to={"/admin/moments"}>Moments  {">"}</NavLink>
+                                            <NavLink className={"naked-link-sm"} to={"#"}>{moment.title.slice(0, 13)}...  {">"}</NavLink>
+                                            <NavLink className={"naked-link-sm"} to={"#"}>Detail  {">"}</NavLink>
+                                        </nav>
+                                    </div>
+                                    <div className="m-3">
+                                        <div className="container p-2 mb-2">
+                                                    <div className="float-start">
+                                                        <img style={profile} src={moment.user.picture} alt="user profile picture" className="d-inline-block" />
+                                                        <p className="fs-4 d-inline-block">{moment.user.username}</p>
+                                                    </div>
+                                                    <div className="float-end">
+                                                        <p className="fs-6 d-inline-block">{fixDate(moment.date)}</p>
+                                                    </div>
+                                                </div> <br /><hr/><br />
+                                        <div  className="row">
+                                            <div style={{overflowX: 'auto', whiteSpace: 'nowrap'}} className="col-lg-7 m-2">
+                                                {
+                                                    moment.media.map((media, i) => {
+                                                        if (media.media_type === 'image') {
+                                                            return <div key={i} className="d-inline-block align-top m-1 border shadow">
+                                                                        <img key={i} width={350} src={media.file} alt="moment picture" />
+                                                                        <br/>
+                                                                        { user.id === moment.id && <button onClick={() => deleteMomentMedia(media.id)} className="btn btn-default m-1"><i className="fas fa-trash text-danger"></i></button> }
+                                                                    </div>
+                                                        } else {
+                                                            return <div key={i} className="d-inline-block align-top m-1 border shadow">
+                                                                        <video key={i} width={350} controls>
+                                                                            <source src={media.file}  type="video/mp4"/>
+                                                                        </video> <br/>
+                                                                        { user.id === moment.user.id && <button onClick={() => deleteMomentMedia(media.id)} className="btn btn-default m-1"><i className="fas fa-trash text-danger"></i></button> }
+                                                                    </div>
+                                                        }
+                                                    })
+                                                }
+                                                <br />
+                                                <div className="m-2">
+                                                    <label htmlFor="file">Add more photos and videos:</label>
+                                                    <input multiple onChange={(e) => setFiles([...e.target.files])} name="file" type="file" accept="image/*,video/*" className="form-control" />
+                                                </div>
+                                            </div>
+                                            <div className="col-lg-4">
+                                                <div className="container">
+                                                    <h1 className="display-6">{title}</h1>
+                                                    <input value={title} onChange={(e) => setTitle(e.target.value)} type="text" className="form-control mb-1" placeholder="new title..." />
+                                                    <hr />
+                                                    <p>{body}</p>
+                                                    <textarea rows={8} value={body} onChange={(e) => setBody(e.target.value)} className="form-control mb-1"></textarea>
+                                                    <hr />
+                                                    {
+                                                        moment.user.id === user.id ? <div className="card-footer">
+                                                                                                <button onClick={() => history.back()} className="card-link btn btn-secondary me-2">
+                                                                                                    <i className="fas fa-arrow-left me-2"></i>
+                                                                                                </button>
+                                                                                                {
+                                                                                                    !deleting ? <button onClick={() => deleteMoment()} className="card-link btn btn-danger me-2">
+                                                                                                                    <i className="fas fa-trash me-2"></i>
+                                                                                                                </button>
+                                                                                                                :  <button disabled className="card-link btn btn-danger me-2">
+                                                                                                                    ...
+                                                                                                                </button>
+                                                                                                }
+                                                                                                {
+                                                                                                    saving ? <button disabled className="card-link btn btn-primary me-2">
+                                                                                                                Saving...
+                                                                                                            </button>
+                                                                                                            : <button onClick={() => saveChanges()} className="card-link btn btn-primary me-2">
+                                                                                                                Save changes
+                                                                                                            </button>
+                                                                                                }
+                                                                                            </div>
+                                                                                            :  <div className="card-footer">
+                                                                                                <Link to={'/admin/moments'} className="card-link btn btn-secondary me-2">
+                                                                                                    <i className="fas fa-arrow-left me-2"></i>
+                                                                                                </Link>
+                                                                                            </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <br /><br /><br />
+                                </>
+                            :  <h1 className="text-center text-muted display-3 m-3">LOADING...</h1>
+  )
+}
+
+export default EditMoment;

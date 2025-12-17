@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API TESTING TEMPLATE</title>
+    <style></style>
+</head>
+<body>
+    
+    <form onsubmit="testMe(e)" id="form" enctype="multipart/form-data">
+        <input type="text" placeholder="title" id="title"/>
+        <textarea id="body" placeholder="body"></textarea>
+
+        <br><br>
+        <label for="image">Image:</label>
+        <input type="file" name="image" id="image" multiple>
+        <br><br>
+        <label for="video">Vids:</label>
+        <input type="file" name="video" id="video" multiple>
+
+        <input type="submit" value="Send data" id="submitBtn">
+    </form>
+
+    <script>
+        // THIS WAS A BIG FAIL. THE BROWSER RELOADS EVEN WITHY PREVENT-DEFAULT
+        const url = 'http://127.0.0.1:9090/api/v1/management/moments/';
+        const getById = (el) => {
+            return document.getElementById(el)
+        }
+
+        function testMe(e) {
+            e.preventDefault()
+            const form = getById('form');
+            const title = getById('title').textContent
+            const body = getById('body').textContent
+            const images = getById('image').files
+            const videos = getById('video').files
+            const submitBtn = getById('submitBtn');
+
+            const imgObj = images.map((img, index) => {
+                return {
+                    image: img
+                }
+            })
+
+            const vidsObj = videos.map((vid, i) => {
+                return {
+                    video: vid
+                }
+            })
+
+            
+            const f = new FormData(form, submitBtn)
+            f.append('title', title)
+            f.append('body', body);
+            f.append('images', JSON.stringify(imgObj))
+            f.append('videos', JSON.stringify(vidsObj))
+
+            console.log(f)
+        }
+
+        async function submitData() {
+            // this is where we sub the data
+        }
+
+    </script>
+</body>
+</html>
