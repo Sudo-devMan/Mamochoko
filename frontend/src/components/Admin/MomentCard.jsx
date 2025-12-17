@@ -39,7 +39,7 @@ function MomentCard ({moment}) {
 		}
 	}
 	return (
-		<div key={moment.id} className="col-lg-4 col-12 mb-1">
+		<div key={moment.id} className="col-lg-3 col-md-5 col-12 mb-1">
 	        <div className="card">
 				{
 					localUser && localUser.role === 'Admin' ? 	<Link className='fw-bold text-black text-decoration-none' to={`/admin/moments/${moment.id}/detail`}>
