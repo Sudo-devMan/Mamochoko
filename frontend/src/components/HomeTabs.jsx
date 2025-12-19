@@ -101,7 +101,7 @@ const HomeTabs = () => {
                 <ReviewForm/>
                 <div className="col-lg-5 see-about scronimate-right">
                     <h2 className='display-1'>See more about us!!!</h2>
-                    <button className="btn btn-primary btn-lg"><a href={"/about"} className={"text-white text-decoration-none"}>Let's Go!!👉</a></button>
+                    <button className="btn btn-primary btn-lg"><a href="/about" className="text-white text-decoration-none">Let's Go!!👉</a></button>
                 </div>
             </div>
         </div>
