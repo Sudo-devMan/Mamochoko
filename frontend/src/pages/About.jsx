@@ -50,7 +50,7 @@ const About = () => {
                     <h1 className="display-1 roon">Our Identity</h1>
                     <p>Our name 'Mamochoko' is actually an acronym emanating from the three surrounding villages of our school.</p>
                     <ul>
-                        <li><span className="roon fw-bold">Ma</span> - Mashita</li>
+                        <li><span className="roon fw-bold">Ma</span> - Mashita (Mmadigorong)</li>
                         <li><span className="roon fw-bold">mo</span> - Mokgonyana</li>
                         <li><span className="roon fw-bold">cho</span> - Chokoe</li>
                         <li><span className="roon fw-bold">ko</span> - Kobo</li>
