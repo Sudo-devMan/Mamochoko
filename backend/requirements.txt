@@ -3,8 +3,12 @@ requests
 djangorestframework
 djangorestframework-simplejwt
 django-cors-headers
-qunicorn
+django-storages
+gunicorn
 whitenoise
 psycopg2-binary
 python-dotenv
 dj-database-url
+pillow
+supabase
+boto3

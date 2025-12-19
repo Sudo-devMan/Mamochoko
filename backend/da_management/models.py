@@ -29,7 +29,7 @@ class UserAction(models.Model):
 	def __str__(self):
 		return f"{self.user.username} | {self.action[:5]}..."
 
-# Implement this later on v4.1.0
+# Implement this later on v4.1.0 [IMPLEMENTED]
 class LearnerApplication(models.Model):
     GENDER = (
         ('Male', 'Male'),
