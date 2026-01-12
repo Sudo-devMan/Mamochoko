@@ -165,7 +165,8 @@ DEFAULT_FILE_STORAGE = 'staff_admin.storage.SupabaseStorage'
 CORS_ALLOWS_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
-    'https://mamochoko.vercel.app'
+    'https://mamochoko.vercel.app',
+    'https://mamochoko.pxxl.click'
 ]
 
 
@@ -192,4 +193,5 @@ STORAGES = {
 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
 AUTH_USER_MODEL = 'staff_admin.CustomUser'
