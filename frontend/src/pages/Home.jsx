@@ -13,7 +13,7 @@ const Home = () => {
                     <button className='btn btn-default text-white fs-4' style={{backgroundColor: "#9c2121"}}>Apply online</button>
                 </Link>
 										<Link to={'/login'}>
-                    <button className='btn mt-2 btn-default text-white fs-4' style={{backgroundColor: "#128eff"}}>Login</button>
+                    <button className='btn mx-2 btn-default text-white fs-4' style={{backgroundColor: "#128eff"}}>Login</button>
                 </Link>
             </div>
         </section>
