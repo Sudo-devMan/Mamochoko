@@ -5,6 +5,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from rest_framework_simplejwt.views import TokenRefreshView
 from da_management.views import TokenObtainView
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(["GET"])
+def health(r):
+		return Response({"health": "is ok"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
