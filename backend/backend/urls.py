@@ -13,6 +13,7 @@ def health(r):
     return Response({"health": "is ok"})
 
 urlpatterns = [
+    path('/', health),
     path('admin/', admin.site.urls),
     path('api/v1/public-info/', include('public_info.urls')),
     path('api/v1/auth/', include('staff_admin.urls')), # staff_admin -> auth
