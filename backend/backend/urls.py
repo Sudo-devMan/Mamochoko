@@ -10,7 +10,7 @@ from rest_framework.response import Response
 
 @api_view(["GET"])
 def health(r):
-	return Response({"health": "is ok"})
+return Response({"health": "is ok"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
